@@ -1,18 +1,23 @@
-Project Title
+Project Title:
+
 Breast Cancer Diagnosis with Machine Learning
 
-Description
+Description:
+
 This project aims to develop a machine learning model to classify breast cancer as malignant or benign based on various diagnostic measures. The dataset used is the Breast Cancer Wisconsin dataset.
 
-Dataset
+Dataset:
+
 The dataset contains features derived from a digitized image of a fine needle aspirate (FNA) of a breast mass. It includes characteristics of the cell nuclei present in the image. Here are the key attributes:
+
   ·ID: Unique identifier for each sample.
 
   ·Target: Diagnosis result (M = malignant, B = benign).
 
   ·Features: Various measurements 
 
-Dependencies
+Dependencies:
+
   ·pandas
 
   ·numpy
@@ -24,6 +29,7 @@ Dependencies
   ·Flask 
 
 Usage
+
 1.Data Preprocessing:
 
 Load data: train = pd.read_csv("path/to/wdbc.data", header=None)
