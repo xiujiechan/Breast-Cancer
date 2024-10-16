@@ -50,7 +50,7 @@ Plot the ROC curve for visual evaluation.
 
 Installation
 
-git clone https://github.com/yourusername/Breast-Cancer.git
+git clone https://github.com/xiujiechan/Breast-Cancer
 cd Breast-Cancer
 pip install -r requirements.txt
 
