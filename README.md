@@ -47,3 +47,18 @@ Train a model using algorithms like Random Forest, SVM, etc.
 Validate the model using metrics like accuracy, precision, recall, ROC-AUC.
 
 Plot the ROC curve for visual evaluation.
+
+Installation
+
+git clone https://github.com/yourusername/Breast-Cancer.git
+cd Breast-Cancer
+pip install -r requirements.txt
+
+Run the Application
+python app.py
+
+Results
+Detailed results of model performance, including confusion matrix, classification report, and visual plots.
+
+Contributing
+Feel free to fork the repository, raise issues, and submit pull requests.
