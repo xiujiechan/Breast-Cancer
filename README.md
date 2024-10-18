@@ -1,5 +1,3 @@
-Project Title:
-
 Breast Cancer Diagnosis with Machine Learning
 
 Description:

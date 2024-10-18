@@ -3,7 +3,6 @@ import pandas as pd
 from sklearn.datasets import load_breast_cancer
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, PowerTransformer, QuantileTransformer
 from streamlit import columns
-from zstandard import train_dictionary
 
 # 載入資料集
 
@@ -15,6 +14,12 @@ cancer = load_breast_cancer()
 
 # 顯示資料註釋
 print(cancer.DESCR)
+
+# 數據集路徑
+file_path = r"C:\Users\user\Desktop\Breast Cancer Wisconsin\wdbc.data"
+
+# 讀取資料
+train = pd.read_csv(file_path, header=None)
 
 #資料框
 columns = [
@@ -30,16 +35,15 @@ columns = [
 df = pd.DataFrame(cancer.data, columns=columns) 
 df['ID'] = range(len(df))  # 增加 ID 列
 df['target'] = cancer.target  #增加 target 列
-print(df.columns.tolist())
 df.reset_index(drop=True, inplace=True)
 
 
 # 重新排序
 df = df[['ID', 'target'] + columns]
-print(df.head())
 
 # 驗證數據框
-print(df.columns)
+print(df.columns.tolist())
+print(df.head())
 print(df['target'].head())
 print(df['ID'].head())
 
@@ -58,12 +62,6 @@ train_y = df['target']
 
 print(train_x.head())
 print(train_y.head())
-
-# 數據集路徑
-file_path = r"C:\Users\user\Desktop\Breast Cancer Wisconsin\wdbc.data"
-
-# 讀取資料
-train = pd.read_csv(file_path, header=None)
 
 #確認列名
 print(train.columns)
@@ -85,8 +83,7 @@ def load_data():
 
 
 # 將需要轉換的變數放在list
-num_cols = ['age', 'height', 'weight', 'amount',
-            'medical_info_a1', 'medical_info_a2', 'medical_info_a3', 'medical_info_b1']
+num_cols = columns
 
 # -----------------------------------
 # 標準化
@@ -134,14 +131,6 @@ test_x[num_cols] = scaler.transform(test_x[num_cols])
 train_x, test_x = load_data()
 # -----------------------------------
 
-
-# 個別標準化訓練資料與測試資料(不好的例子)
-scaler_train = StandardScaler()
-scaler_train.fit(train_x[num_cols])
-train_x[num_cols] = scaler_train.transform(train_x[num_cols])
-scaler_test = StandardScaler()
-scaler_test.fit(test_x[num_cols])
-test_x[num_cols] = scaler_test.transform(test_x[num_cols])
 
 # -----------------------------------
 # Min-Max 縮放
