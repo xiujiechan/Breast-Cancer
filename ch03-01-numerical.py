@@ -1,48 +1,87 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import PowerTransformer
-from sklearn.preprocessing import QuantileTransformer
+from sklearn.datasets import load_breast_cancer
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, PowerTransformer, QuantileTransformer
+from streamlit import columns
+from zstandard import train_dictionary
 
-# 準備資料
-# 讀取資料
-# 用Pandas的DataFrame存資料
+# 載入資料集
+
+# 匯入套件提供的函式，可直接載入資料集
+#from sklearn.datasets import load_breast_cancer
+
+# 載入資料
+cancer = load_breast_cancer()
+
+# 顯示資料註釋
+print(cancer.DESCR)
+
+#資料框
+columns = [
+    '半徑_平均值', '紋理_平均值', '周長_平均值', '面積_平均值', '平滑度_平均值',
+    '緊密度_平均值', '凹面_平均值', '凹點_平均值', '對稱性_平均值', '分形維度_平均值',
+    '半徑_標準誤差', '紋理_標準誤差', '周長_標準誤差', '面積_標準誤差', '平滑度_標準誤差',
+    '緊密度_標準誤差', '凹面_標準誤差', '凹點_標準誤差', '對稱性_標準誤差', '分形維度_標準誤差',
+    '半徑_最大值', '紋理_最大值', '周長_最大值', '面積_最大值', '平滑度_最大值',
+    '緊密度_最大值', '凹面_最大值', '凹點_最大值', '對稱性_最大值', '分形維度_最大值'
+]
+
+# 將數據載入資料框
+df = pd.DataFrame(cancer.data, columns=columns) 
+df['ID'] = range(len(df))  # 增加 ID 列
+df['target'] = cancer.target  #增加 target 列
+print(df.columns.tolist())
+df.reset_index(drop=True, inplace=True)
 
 
-# Path to your dataset
-file_path = r"C:\Users\user\Desktop\Breast Cancer Wisconsin\wdbc.data"
+# 重新排序
+df = df[['ID', 'target'] + columns]
+print(df.head())
 
-# Read the data without headers
-train = pd.read_csv(file_path, header=None)
+# 驗證數據框
+print(df.columns)
+print(df['target'].head())
+print(df['ID'].head())
 
-# Set column names
-test_x = pd.read_csv(file_path, header=None)
-test_x.columns = ['ID', 'target'] + [f'feature{i}' for i in range(1, test_x.shape[1] - 1)]
-test_x = test_x.drop(['target', 'ID'], axis=1)
+#ignore
+train_x = df.drop(columns=['target', 'ID'], axis=1, errors='ignore')
 
-# Verify the data
-print(train.columns)
-print(train.head())
+# 將載入的資料匯入資料框
+df = pd.DataFrame(cancer.data, columns=columns)
 
-# Split the data into features and target variable
-train_x = train.drop(['target', 'ID'], axis=1)
-train_y = train['target']
+# 取得標準答案
+y = pd.Series(cancer.target)
+
+# 分割特徵和目標
+train_x = df.drop(columns=['target','ID'], axis=1)
+train_y = df['target']
 
 print(train_x.head())
 print(train_y.head())
 
+# 數據集路徑
+file_path = r"C:\Users\user\Desktop\Breast Cancer Wisconsin\wdbc.data"
+
+# 讀取資料
+train = pd.read_csv(file_path, header=None)
+
+#確認列名
+print(train.columns)
+
+#刪除不需要的列
+train_x = train.drop(columns, axis=1)
+
+#定義目標變量
+train_y = train['target']
 
 # 備份資料，以便之後再利用
 train_x_saved = train_x.copy()
-test_x_saved = test_x.copy()
-
+test_x_saved = train_x.copy()  # 假設test_x使用相同數據
 
 # 讀取資料的函數
 def load_data():
     train_x, test_x = train_x_saved.copy(), test_x_saved.copy()
     return train_x, test_x
-
 
 
 # 將需要轉換的變數放在list
@@ -51,10 +90,23 @@ num_cols = ['age', 'height', 'weight', 'amount',
 
 # -----------------------------------
 # 標準化
-# -----------------------------------
+train_x, test_x = load_data()
+scaler = StandardScaler()
+scaler.fit(train_x[num_cols])
+train_x[num_cols] = scaler.transform(train_x[num_cols])
+test_x[num_cols] = scaler.transform(test_x[num_cols])
+
+
+# Min-Max 縮放
+train_x, test_x = load_data()
+scaler = MinMaxScaler()
+scaler.fit(train_x[num_cols])
+train_x[num_cols] = scaler.transform(train_x[num_cols])
+test_x[num_cols] = scaler.transform(test_x[num_cols])
+
 # 讀取資料
 train_x, test_x = load_data()
-# -----------------------------------
+
 
 # 對上面所指定的欄位資料進行標準化
 scaler = StandardScaler()
